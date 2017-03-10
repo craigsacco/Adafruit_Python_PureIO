@@ -155,6 +155,12 @@ class SMBus(object):
         ioctl(self._device.fileno(), I2C_RDWR, request)
         return result.value
 
+    def read_bytes(self, addr, length=1):
+        """Read multiple bytes from the specified device."""
+        assert self._device is not None, 'Bus must be opened before operations are made against it!'
+        self._select_device(addr)
+        return [ord(x) for x in self._device.read(length)]
+
     def read_word_data(self, addr, cmd):
         """Read a word (2 bytes) from the specified cmd register of the device.
         Note that this will interpret data using the endianness of the processor
