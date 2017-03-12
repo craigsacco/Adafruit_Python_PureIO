@@ -266,6 +266,16 @@ class SMBus(object):
         data[1:] = vals[0:]
         self.write_i2c_block_data(addr, cmd, data)
 
+    def write_bytes(self, addr, buffer):
+        """Write a buffer of data to the specified device.
+        """
+        assert self._device is not None, 'Bus must be opened before operations are made against it!'
+        # Construct an array from the buffer
+        data = bytearray([x & 0xff for x in buffer])
+        # Send the data to the device.
+        self._select_device(addr)
+        self._device.write(data)
+
     def write_i2c_block_data(self, addr, cmd, vals):
         """Write a buffer of data to the specified cmd register of the device.
         """
